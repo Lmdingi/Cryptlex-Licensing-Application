@@ -7,6 +7,137 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+
+        </Grid.RowDefinitions>
+
+        <Border Grid.Column="0">
+            <Rectangle>
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="Gainsboro" Offset="0.0" />
+                        <GradientStop Color="WhiteSmoke" Offset="0.50" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Border>        
+        <Border Grid.Column="1">
+            <Rectangle>
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="Gainsboro" Offset="0.0" />
+                        <GradientStop Color="WhiteSmoke" Offset="0.50" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Border>
+
+        <Border Grid.Column="0" Grid.Row="1">
+            <Rectangle>
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="Gainsboro" Offset="0.0" />
+                        <GradientStop Color="WhiteSmoke" Offset="0.50" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Border>
+        <Border Grid.Column="1" Grid.Row="1">
+            <Rectangle>
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="Gainsboro" Offset="0.0" />
+                        <GradientStop Color="WhiteSmoke" Offset="0.50" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Border>
+
+        <Border Grid.Column="0" Grid.Row="3">
+            <Rectangle>
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="Gainsboro" Offset="0.0" />
+                        <GradientStop Color="WhiteSmoke" Offset="0.50" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Border>
+        <Border Grid.Column="1" Grid.Row="3">
+            <Rectangle>
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="Gainsboro" Offset="0.0" />
+                        <GradientStop Color="WhiteSmoke" Offset="0.50" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Border>
+
+        <Border Grid.Column="0" Grid.Row="4">
+            <Rectangle>
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="Gainsboro" Offset="0.0" />
+                        <GradientStop Color="WhiteSmoke" Offset="0.50" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Border>
+        <Border Grid.Column="1" Grid.Row="4">
+            <Rectangle>
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="Gainsboro" Offset="0.0" />
+                        <GradientStop Color="WhiteSmoke" Offset="0.50" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Border>
+
+        <Label Content="Products" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <Label Content="Create Product" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1"/>
+
+        <Label Content="Licenses Templates" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="3"/>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <ListBox ItemsSource="{Binding Products}" DisplayMemberPath="DisplayName" Margin="10"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <ListBox ItemsSource="{Binding LicenseTemplates}" DisplayMemberPath="Name" Margin="10"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="10">
+                <TextBlock Text="Product Name:" />
+                <TextBox x:Name="txtName" />
+
+                <TextBlock Text="Display Name:" Margin="0,10,0,0"/>
+                <TextBox x:Name="txtDisplayName" />
+
+                <TextBlock Text="Description:" Margin="0,10,0,0"/>
+                <TextBox x:Name="txtDescription" />
+
+                <TextBlock Text="License Template:" Margin="0,10,0,0"/>
+                <ComboBox Name="cmbLicenseTemplate"  Height="30" VerticalContentAlignment="Center" VerticalAlignment="Top"  MaxDropDownHeight="150"></ComboBox>
+                <Button Content="Create Product" Click="CreateProduct_Click" Margin="0,20,0,0"/>
+            </StackPanel>
+        </ScrollViewer>
         
     </Grid>
 </Window>

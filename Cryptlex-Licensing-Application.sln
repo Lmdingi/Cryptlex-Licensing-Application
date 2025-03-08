@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35728.132 d17.12
+VisualStudioVersion = 17.12.35728.132
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptlex-Licensing-Application", "Cryptlex-Licensing-Application\Cryptlex-Licensing-Application.csproj", "{2B17311C-F329-4343-AC24-2C8B8F9C481F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{CECFFE7F-EE7D-41FB-B795-A68FD3D7AC1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{2B17311C-F329-4343-AC24-2C8B8F9C481F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B17311C-F329-4343-AC24-2C8B8F9C481F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B17311C-F329-4343-AC24-2C8B8F9C481F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CECFFE7F-EE7D-41FB-B795-A68FD3D7AC1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CECFFE7F-EE7D-41FB-B795-A68FD3D7AC1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CECFFE7F-EE7D-41FB-B795-A68FD3D7AC1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CECFFE7F-EE7D-41FB-B795-A68FD3D7AC1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
