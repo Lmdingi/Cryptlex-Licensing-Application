@@ -12,5 +12,6 @@ namespace Services.Interfaces
     {
         Task<Product[]> GetProductsAsync();
         Task<bool> CreateProductAsync(CreateProductDto productDto);
+        Task<bool> DeleteProductAsync(Guid productId);
     }
 }

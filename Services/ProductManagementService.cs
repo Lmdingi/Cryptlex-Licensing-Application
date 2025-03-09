@@ -77,5 +77,25 @@ namespace Services
             }
             
         }
+
+        public async Task<bool> DeleteProductAsync(Guid productId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(_accessToken))
+                {
+                    throw new ArgumentNullException("ACCESS_TOKEN Token not found!");
+                }                
+
+                HttpResponseMessage response = await _httpClient.DeleteAsync($"{BaseUrl}products/{productId}");
+                response.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return false;
+            }
+        }
     }
 }

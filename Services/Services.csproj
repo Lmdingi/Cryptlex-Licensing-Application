@@ -100,8 +100,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\ExpirationStrategy.cs" />
+    <Compile Include="Constants\FingerprintMatchingStrategy.cs" />
+    <Compile Include="Constants\Type.cs" />
+    <Compile Include="DTOs\CreateLicenseTemplateDto.cs" />
     <Compile Include="DTOs\CreateProductDto.cs" />
-    <Compile Include="Interfaces\ICryptlexService.cs" />
     <Compile Include="Interfaces\ILicenseManagementService.cs" />
     <Compile Include="Interfaces\ILoggerService.cs" />
     <Compile Include="Interfaces\IProductManagementService.cs" />
@@ -119,5 +122,6 @@
   <ItemGroup>
     <Content Include="ILLink\ILLink.Descriptors.LibraryBuild.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

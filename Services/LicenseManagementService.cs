@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Services.DTOs;
 using Services.Interfaces;
 using Services.Models;
 using System;
@@ -51,6 +52,49 @@ namespace Services
             {
                 _logger.LogError(ex.Message, ex);
                 return null;
+            }
+        }
+
+        public async Task<bool> CreateLicenseTemplateAsync(CreateLicenseTemplateDto licenseTemplateDto)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(_accessToken))
+                {
+                    throw new ArgumentNullException("ACCESS_TOKEN Token not found!");
+                }
+
+                string jsonData = JsonConvert.SerializeObject(licenseTemplateDto);
+                var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await _httpClient.PostAsync($"{BaseUrl}license-templates", content);
+                response.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return false;
+            }
+        }
+
+        public async Task<bool> DeletelicenseTemplateAsync(Guid licenseTemplateId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(_accessToken))
+                {
+                    throw new ArgumentNullException("ACCESS_TOKEN Token not found!");
+                }
+
+                HttpResponseMessage response = await _httpClient.DeleteAsync($"{BaseUrl}license-templates/{licenseTemplateId}");
+                response.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return false;
             }
         }
     }

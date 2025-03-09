@@ -1,4 +1,5 @@
-﻿using Services.Models;
+﻿using Services.DTOs;
+using Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,7 @@ namespace Services.Interfaces
     internal interface ILicenseManagementService
     {
         Task<LicenseTemplate[]> GetAllLicenseTemplatesAsync();
+        Task<bool> CreateLicenseTemplateAsync(CreateLicenseTemplateDto licenseTemplateDto);
+        Task<bool> DeletelicenseTemplateAsync(Guid licenseTemplateId);
     }
 }

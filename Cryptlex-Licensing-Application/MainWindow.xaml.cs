@@ -1,7 +1,9 @@
 ﻿using DotNetEnv;
 using Services;
+using Services.Constants;
 using Services.DTOs;
 using Services.Models;
+using Sprache;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,6 +21,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
+using ServiceType = Services.Constants.Type;
 
 namespace Cryptlex_Licensing_Application
 {
@@ -124,7 +127,7 @@ namespace Cryptlex_Licensing_Application
                     return;
                 }
 
-                ClearProductForm();
+                ClearProductForm(new TextBox[] { txtName, txtDisplayName, txtDescription });
 
                 MessageBox.Show("Product has been created", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -134,12 +137,51 @@ namespace Cryptlex_Licensing_Application
             }
             catch (Exception ex)
             {
-                // log error
-                MessageBox.Show("Could not find products", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError(ex.Message, ex);
+                MessageBox.Show("An error occured while creating Product", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
         }
-        ////////////////////// License Template
+
+        private async void DeleteProduct_Click(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                MessageBoxResult result = MessageBoxResult.No;
+
+                if (e.AddedItems.Count > 0)
+                {
+                    var selectedProduct = e.AddedItems[0] as Product;
+                    result = MessageBox.Show(
+                    $"Do you want to delete {selectedProduct.DisplayName}?",
+                    "Delete Confirmation",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                    if(result == MessageBoxResult.Yes)
+                    {
+                        bool isDeleted = await _productManagementService.DeleteProductAsync(selectedProduct.Id);
+
+                        if (!isDeleted)
+                        {
+                            MessageBox.Show("Could not delete product", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+
+                        LoadProducts();
+                    }
+                }
+
+                ListBox listBox = sender as ListBox;
+                listBox.SelectedItem = null;               
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                MessageBox.Show("An error occured while deleting product", "Error", MessageBoxButton.OK, MessageBoxImage.Error);                
+            }
+        }
+        
         private async void LoadLicenseTemplates()
         {
             try
@@ -157,7 +199,11 @@ namespace Cryptlex_Licensing_Application
                 DataContext = null;
                 DataContext = this;
 
-                BindLicenseTemplates();               
+                BindLicenseTemplates();
+
+                loadComboBoxOptions(FingerprintMatchingStrategy.AllValues, cmbFingerprintMatchingStrategy);
+                loadComboBoxOptions(ExpirationStrategy.AllValues, cmbExpirationStrategy);
+                loadComboBoxOptions(ServiceType.AllValues, cmbType);
 
                 return;
             }
@@ -167,7 +213,122 @@ namespace Cryptlex_Licensing_Application
                 MessageBox.Show("An error occured while loading License Templates", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-        }       
+        }
+
+        private async void CreateLicenseTemplate_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (ltName.Text == null || ltName.Text.Trim() == "")
+                {
+                    MessageBox.Show("Please Enter Name", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ltName.Focus();
+                    return;
+                }
+
+                if (cmbFingerprintMatchingStrategy.SelectedValue == null || cmbFingerprintMatchingStrategy.SelectedIndex == 0)
+                {
+                    MessageBox.Show("Please Select Fingerprint Matching Strategy", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    cmbFingerprintMatchingStrategy.Focus();
+                    return;
+                }
+
+                if (cmbExpirationStrategy.SelectedValue == null || cmbExpirationStrategy.SelectedIndex == 0)
+                {
+                    MessageBox.Show("Please Select Expiration Strategy", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    cmbExpirationStrategy.Focus();
+                    return;
+                }
+
+                if (cmbType.SelectedValue == null || cmbType.SelectedIndex == 0)
+                {
+                    MessageBox.Show("Please Select Type", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    cmbType.Focus();
+                    return;
+                }
+
+                CreateLicenseTemplateDto licenseTemplateDto = new CreateLicenseTemplateDto();
+
+                licenseTemplateDto.Name = ltName.Text;
+                licenseTemplateDto.FingerprintMatchingStrategy = (string)cmbFingerprintMatchingStrategy.SelectedValue;
+                licenseTemplateDto.AllowVmActivation = allowVmActivationCheckBox.IsChecked;
+                licenseTemplateDto.AllowContainerActivation = allowContainerActivationCheckBox.IsChecked;
+                licenseTemplateDto.UserLocked = userLockedCheckBox.IsChecked;
+                licenseTemplateDto.DisableGeoLocation = disableGeoLocationCheckBox.IsChecked;
+                licenseTemplateDto.Validity = long.Parse(validity.Text);
+                licenseTemplateDto.ExpirationStrategy = (string)cmbExpirationStrategy.SelectedValue;
+                licenseTemplateDto.AllowedActivations = long.Parse(allowedActivations.Text);
+                licenseTemplateDto.AllowedDeactivations = long.Parse(allowedDeactivations.Text);
+                licenseTemplateDto.AllowClientLeaseDuration = allowClientLeaseDurationCheckBox.IsChecked;
+                licenseTemplateDto.ServerSyncGracePeriod = long.Parse(serverSyncGracePeriod.Text);
+                licenseTemplateDto.ServerSyncInterval = long.Parse(serverSyncInterval.Text);
+                licenseTemplateDto.AllowedClockOffset = long.Parse(allowedClockOffset.Text);
+                licenseTemplateDto.ExpiringSoonEventOffset = long.Parse(expiringSoonEventOffset.Text);
+                licenseTemplateDto.Type = (string)cmbType.SelectedValue;
+
+                bool isCreated = await _licenseManagementService.CreateLicenseTemplateAsync(licenseTemplateDto);
+
+                if (!isCreated)
+                {
+                    MessageBox.Show("Could not create License Template", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+
+                ClearProductForm(new TextBox[] { ltName, allowedActivations, allowedDeactivations,  serverSyncGracePeriod, serverSyncInterval, allowedClockOffset, expiringSoonEventOffset, validity });
+
+                MessageBox.Show("License Template has been created", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                LoadProducts();
+                LoadLicenseTemplates();
+                return;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                MessageBox.Show("An error occured while creating a License Template", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+        }
+
+        private async void DeleteLicenseTemplate_Click(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                MessageBoxResult result = MessageBoxResult.No;
+
+                if (e.AddedItems.Count > 0)
+                {
+                    var selectedLicenseTemplate = e.AddedItems[0] as LicenseTemplate;
+                    result = MessageBox.Show(
+                    $"Do you want to delete {selectedLicenseTemplate.Name}?",
+                    "Delete Confirmation",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        bool isDeleted = await _licenseManagementService.DeletelicenseTemplateAsync(selectedLicenseTemplate.Id);
+
+                        if (!isDeleted)
+                        {
+                            MessageBox.Show("Could not delete License Template", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+
+                        LoadLicenseTemplates();
+                    }
+                }
+
+                ListBox listBox = sender as ListBox;
+                listBox.SelectedItem = null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                MessageBox.Show("An error occured while deleting License Template", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
         private void BindLicenseTemplates()
         {
@@ -195,11 +356,43 @@ namespace Cryptlex_Licensing_Application
             }
         }
 
-        private void ClearProductForm()
+        private void loadComboBoxOptions(string[] options, ComboBox comboBox)
         {
-            txtName.Text = string.Empty;
-            txtDisplayName.Text = string.Empty;
-            txtDescription.Text = string.Empty;
+            try
+            {
+                DataTable dt = new DataTable();
+                dt.Columns.Add("Value");
+
+                dt.Rows.Add("--SELECT--");
+
+                foreach (var option in options)
+                {
+                    dt.Rows.Add(option);
+                }
+
+                comboBox.ItemsSource = dt.DefaultView;
+                comboBox.DisplayMemberPath = "Value";
+                comboBox.SelectedValuePath = "Value";
+                comboBox.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+            }
         }
+
+        private void ClearProductForm(TextBox[] textBoxes)
+        {
+            foreach (var textBox in textBoxes)
+            {
+                textBox.Text = string.Empty;
+            }
+        }
+
+        private void NumberInput_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !int.TryParse(e.Text, out _);
+        }
+
     }
 }
