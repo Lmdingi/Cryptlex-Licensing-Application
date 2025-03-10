@@ -103,6 +103,7 @@
     <Compile Include="Constants\ExpirationStrategy.cs" />
     <Compile Include="Constants\FingerprintMatchingStrategy.cs" />
     <Compile Include="Constants\Type.cs" />
+    <Compile Include="DTOs\CreateLicenseKeyDto.cs" />
     <Compile Include="DTOs\CreateLicenseTemplateDto.cs" />
     <Compile Include="DTOs\CreateProductDto.cs" />
     <Compile Include="Interfaces\ILicenseManagementService.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Interfaces\IProductManagementService.cs" />
     <Compile Include="LicenseManagementService.cs" />
     <Compile Include="LoggerService.cs" />
+    <Compile Include="Models\License.cs" />
     <Compile Include="Models\LicenseTemplate.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="ProductManagementService.cs" />

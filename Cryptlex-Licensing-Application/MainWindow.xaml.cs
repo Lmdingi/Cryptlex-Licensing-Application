@@ -69,6 +69,8 @@ namespace Cryptlex_Licensing_Application
                 DataContext = null;
                 DataContext = this;
 
+                BindProducts();
+
                 return; 
             } 
             catch (Exception ex)
@@ -127,7 +129,7 @@ namespace Cryptlex_Licensing_Application
                     return;
                 }
 
-                ClearProductForm(new TextBox[] { txtName, txtDisplayName, txtDescription });
+                ClearTextBoxText(new TextBox[] { txtName, txtDisplayName, txtDescription });
 
                 MessageBox.Show("Product has been created", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -275,7 +277,7 @@ namespace Cryptlex_Licensing_Application
                 }
 
 
-                ClearProductForm(new TextBox[] { ltName, allowedActivations, allowedDeactivations,  serverSyncGracePeriod, serverSyncInterval, allowedClockOffset, expiringSoonEventOffset, validity });
+                ClearTextBoxText(new TextBox[] { ltName, allowedActivations, allowedDeactivations,  serverSyncGracePeriod, serverSyncInterval, allowedClockOffset, expiringSoonEventOffset, validity });
 
                 MessageBox.Show("License Template has been created", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -330,6 +332,72 @@ namespace Cryptlex_Licensing_Application
             }
         }
 
+        private async void CreateLicenseKey_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (cmbProducts.SelectedValue == null || cmbProducts.SelectedIndex == 0)
+                {
+                    MessageBox.Show("Please Select a Product", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    cmbProducts.Focus();
+                    return;
+                }
+
+                CreateLicenseKeyDto createLicenseKeyDto = new CreateLicenseKeyDto();
+
+                createLicenseKeyDto.ProductId = Guid.Parse((string)cmbProducts.SelectedValue);
+
+                var license = await _licenseManagementService.GenerateLicenseKeyAsync(createLicenseKeyDto);
+
+                if (license is null)
+                {
+                    MessageBox.Show("Could not generate License Key", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                txtLicenseKey.Text = license.Key;
+
+                MessageBox.Show("License key have been successfully generated. Copy it and click 'Clear' when done.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                MessageBox.Show("An error occured while Generating License Key", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ClearLicenseKey_Click(object sender, RoutedEventArgs e)
+        {
+            txtLicenseKey.Text = "";
+        }
+
+        //********************
+        private void BindProducts()
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                dt.Columns.Add("Text");
+                dt.Columns.Add("Value");
+
+                dt.Rows.Add("--SELECT--", null);
+
+                foreach (var product in Products)
+                {
+                    dt.Rows.Add(product.Name, product.Id);
+                }
+
+                cmbProducts.ItemsSource = dt.DefaultView;
+                cmbProducts.DisplayMemberPath = "Text";
+                cmbProducts.SelectedValuePath = "Value";
+                cmbProducts.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+            }
+        }
+
         private void BindLicenseTemplates()
         {
             try
@@ -381,7 +449,7 @@ namespace Cryptlex_Licensing_Application
             }
         }
 
-        private void ClearProductForm(TextBox[] textBoxes)
+        private void ClearTextBoxText(TextBox[] textBoxes)
         {
             foreach (var textBox in textBoxes)
             {
@@ -394,5 +462,6 @@ namespace Cryptlex_Licensing_Application
             e.Handled = !int.TryParse(e.Text, out _);
         }
 
+        
     }
 }

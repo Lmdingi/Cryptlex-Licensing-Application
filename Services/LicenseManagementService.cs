@@ -97,5 +97,37 @@ namespace Services
                 return false;
             }
         }
+
+        public async Task<License> GenerateLicenseKeyAsync(CreateLicenseKeyDto createLicenseKeyDto)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(_accessToken))
+                {
+                    throw new ArgumentNullException("ACCESS_TOKEN Token not found!");
+                }
+
+                string jsonData = JsonConvert.SerializeObject(createLicenseKeyDto);
+                var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await _httpClient.PostAsync($"{BaseUrl}licenses", content);
+                response.EnsureSuccessStatusCode();
+
+                string jsonString = await response.Content.ReadAsStringAsync();
+
+                if (string.IsNullOrEmpty(jsonString))
+                {
+                    _logger.LogInformation("Could not generate License");
+                    return null;
+                }
+
+                return JsonConvert.DeserializeObject<License>(jsonString);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return null;
+            }
+        }
     }
 }

@@ -13,5 +13,6 @@ namespace Services.Interfaces
         Task<LicenseTemplate[]> GetAllLicenseTemplatesAsync();
         Task<bool> CreateLicenseTemplateAsync(CreateLicenseTemplateDto licenseTemplateDto);
         Task<bool> DeletelicenseTemplateAsync(Guid licenseTemplateId);
+        Task<License> GenerateLicenseKeyAsync(CreateLicenseKeyDto createLicenseKeyDto);
     }
 }
