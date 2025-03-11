@@ -1,4 +1,5 @@
-﻿using DotNetEnv;
+﻿using Cryptlex;
+using DotNetEnv;
 using Services;
 using Services.Constants;
 using Services.DTOs;
@@ -21,6 +22,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
+using System.IO;
 using ServiceType = Services.Constants.Type;
 
 namespace Cryptlex_Licensing_Application
@@ -40,13 +42,15 @@ namespace Cryptlex_Licensing_Application
             InitializeComponent();
             Env.Load();
 
-            _productManagementService = new ProductManagementService(Environment.GetEnvironmentVariable("ACCESS_TOKEN"));
-            _licenseManagementService = new LicenseManagementService(Environment.GetEnvironmentVariable("ACCESS_TOKEN"));
+            _productManagementService = new ProductManagementService();
+            _licenseManagementService = new LicenseManagementService();
 
             _logger = new LoggerService();
 
             Products = new List<Product>();   
             LicenseTemplates = new List<LicenseTemplate>();
+
+            _licenseManagementService.SetProductFiles();            
 
             LoadProducts();
             LoadLicenseTemplates();            
@@ -203,9 +207,9 @@ namespace Cryptlex_Licensing_Application
 
                 BindLicenseTemplates();
 
-                loadComboBoxOptions(FingerprintMatchingStrategy.AllValues, cmbFingerprintMatchingStrategy);
-                loadComboBoxOptions(ExpirationStrategy.AllValues, cmbExpirationStrategy);
-                loadComboBoxOptions(ServiceType.AllValues, cmbType);
+                LoadComboBoxOptions(FingerprintMatchingStrategy.AllValues, cmbFingerprintMatchingStrategy);
+                LoadComboBoxOptions(ExpirationStrategy.AllValues, cmbExpirationStrategy);
+                LoadComboBoxOptions(ServiceType.AllValues, cmbType);
 
                 return;
             }
@@ -366,6 +370,49 @@ namespace Cryptlex_Licensing_Application
             }
         }
 
+        private void activateLicenseBtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string[] productIds = _licenseManagementService.GetProductIds();
+
+                if(productIds == null || productIds.Length == 0)
+                {
+                    MessageBox.Show("Activation failed, no Product Id found", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    return;
+                }
+
+                int status = -1;
+
+                foreach (var productId in productIds)
+                {
+                    status = _licenseManagementService.ActivateLicense(txtActivatingLicenseKey.Text, productId);
+
+                    if(status > -1)
+                    {
+                        break;
+                    }
+                }
+
+                if (status == LexStatusCodes.LA_OK || status == LexStatusCodes.LA_EXPIRED || status == LexStatusCodes.LA_SUSPENDED)
+                {
+                    MessageBox.Show("Activation successful", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    txtActivatingLicenseKey.Text = "";
+                }
+                else
+                {                   
+                    MessageBox.Show("Activation failed", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (LexActivatorException ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                MessageBox.Show("An error occured while Activating License", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void ClearLicenseKey_Click(object sender, RoutedEventArgs e)
         {
             txtLicenseKey.Text = "";
@@ -424,7 +471,7 @@ namespace Cryptlex_Licensing_Application
             }
         }
 
-        private void loadComboBoxOptions(string[] options, ComboBox comboBox)
+        private void LoadComboBoxOptions(string[] options, ComboBox comboBox)
         {
             try
             {
@@ -461,7 +508,5 @@ namespace Cryptlex_Licensing_Application
         {
             e.Handled = !int.TryParse(e.Text, out _);
         }
-
-        
     }
 }

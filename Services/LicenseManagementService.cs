@@ -1,9 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using Cryptlex;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Services.DTOs;
 using Services.Interfaces;
 using Services.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -13,40 +16,28 @@ namespace Services
 {
     public class LicenseManagementService : ILicenseManagementService
     {
-        private readonly HttpClient _httpClient;
         private readonly LoggerService _logger;
-        private const string BaseUrl = "https://api.cryptlex.com/v3/";
-        private readonly string _accessToken;
+        private readonly CryptlexAPIServices _cryptlexAPIServices;
 
-        public LicenseManagementService(string accessToken)
+        public LicenseManagementService()
         {
-            _httpClient = new HttpClient();
             _logger = new LoggerService();
-            _accessToken = accessToken;
-
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
+            _cryptlexAPIServices = new CryptlexAPIServices();
         }
 
         public async Task<LicenseTemplate[]> GetAllLicenseTemplatesAsync()
         {
             try
             {
-                if (string.IsNullOrEmpty(_accessToken))
-                {
-                    throw new ArgumentNullException("ACCESS_TOKEN Token not found!");
-                }
+                string response = await _cryptlexAPIServices.GetRequest("license-templates");
 
-                HttpResponseMessage response = await _httpClient.GetAsync($"{BaseUrl}license-templates");
-                response.EnsureSuccessStatusCode();
-
-                string jsonString = await response.Content.ReadAsStringAsync();
-
-                if (string.IsNullOrEmpty(jsonString))
+                if (string.IsNullOrEmpty(response))
                 {
                     _logger.LogInformation("Could not find License Templates");
                     return Array.Empty<LicenseTemplate>();
                 }
-                return JsonConvert.DeserializeObject<LicenseTemplate[]>(jsonString);
+
+                return JsonConvert.DeserializeObject<LicenseTemplate[]>(response);
             }
             catch (Exception ex)
             {
@@ -59,16 +50,15 @@ namespace Services
         {
             try
             {
-                if (string.IsNullOrEmpty(_accessToken))
+                string jsonData = JsonConvert.SerializeObject(licenseTemplateDto);
+                string response = await _cryptlexAPIServices.CreateRequest(jsonData, "license-templates");
+
+                if (string.IsNullOrEmpty(response))
                 {
-                    throw new ArgumentNullException("ACCESS_TOKEN Token not found!");
+                    _logger.LogInformation("Could not Create Licence Template");
+                    return false;
                 }
 
-                string jsonData = JsonConvert.SerializeObject(licenseTemplateDto);
-                var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-
-                HttpResponseMessage response = await _httpClient.PostAsync($"{BaseUrl}license-templates", content);
-                response.EnsureSuccessStatusCode();
                 return true;
             }
             catch (Exception ex)
@@ -82,13 +72,14 @@ namespace Services
         {
             try
             {
-                if (string.IsNullOrEmpty(_accessToken))
+                bool isDeleted = await _cryptlexAPIServices.DeleteRequest($"license-templates/{licenseTemplateId}");
+
+                if (!isDeleted)
                 {
-                    throw new ArgumentNullException("ACCESS_TOKEN Token not found!");
+                    _logger.LogInformation($"Could not Delete License Temolate with id: {licenseTemplateId}");
+                    return false;
                 }
 
-                HttpResponseMessage response = await _httpClient.DeleteAsync($"{BaseUrl}license-templates/{licenseTemplateId}");
-                response.EnsureSuccessStatusCode();
                 return true;
             }
             catch (Exception ex)
@@ -101,32 +92,78 @@ namespace Services
         public async Task<License> GenerateLicenseKeyAsync(CreateLicenseKeyDto createLicenseKeyDto)
         {
             try
-            {
-                if (string.IsNullOrEmpty(_accessToken))
-                {
-                    throw new ArgumentNullException("ACCESS_TOKEN Token not found!");
-                }
-
+            {         
                 string jsonData = JsonConvert.SerializeObject(createLicenseKeyDto);
-                var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                string response = await _cryptlexAPIServices.CreateRequest(jsonData, "licenses");
 
-                HttpResponseMessage response = await _httpClient.PostAsync($"{BaseUrl}licenses", content);
-                response.EnsureSuccessStatusCode();
-
-                string jsonString = await response.Content.ReadAsStringAsync();
-
-                if (string.IsNullOrEmpty(jsonString))
+                if (string.IsNullOrEmpty(response))
                 {
-                    _logger.LogInformation("Could not generate License");
+                    _logger.LogInformation("Could not Create product");
                     return null;
                 }
 
-                return JsonConvert.DeserializeObject<License>(jsonString);
+                return JsonConvert.DeserializeObject<License>(response);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
                 return null;
+            }
+        }
+
+        public void SetProductFiles()
+        {
+            try
+            {
+                string[] productDatFiles = Directory.GetFiles("Config/ProductDat");
+
+                if (productDatFiles == null || productDatFiles.Length == 0)
+                {
+                    _logger.LogInformation("Could not find Product.dat Files");
+                    return;
+                }
+
+                foreach (var productDatFile in productDatFiles)
+                {
+                    LexActivator.SetProductFile(productDatFile);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+            }
+        }
+
+        public string[] GetProductIds()
+        {           
+            try
+            {
+                string ProductIdsFilePath = Path.Combine("Config", "ProductId", "ProductId.json");
+
+                var jsonString = File.ReadAllText(ProductIdsFilePath);
+                var jsonObject = JObject.Parse(jsonString);
+                return jsonObject["ProductIds"].ToObject<string[]>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return null;
+            }
+        }
+
+        public int ActivateLicense(string licenseKey, string productId)
+        {
+            try
+            {                
+                LexActivator.SetProductId(productId, LexActivator.PermissionFlags.LA_USER);
+                LexActivator.SetLicenseKey(licenseKey);
+
+                return LexActivator.ActivateLicense();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return -1;
             }
         }
     }
