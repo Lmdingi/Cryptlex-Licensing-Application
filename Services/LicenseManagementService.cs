@@ -33,7 +33,7 @@ namespace Services
 
                 if (string.IsNullOrEmpty(response))
                 {
-                    _logger.LogInformation("Could not find License Templates");
+                    _logger.LogInformation("Could not find License Templates.");
                     return Array.Empty<LicenseTemplate>();
                 }
 
@@ -41,7 +41,7 @@ namespace Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred while getting the License Templates.");
                 return null;
             }
         }
@@ -55,7 +55,7 @@ namespace Services
 
                 if (string.IsNullOrEmpty(response))
                 {
-                    _logger.LogInformation("Could not Create Licence Template");
+                    _logger.LogInformation("Could not Create Licence Template.");
                     return false;
                 }
 
@@ -63,7 +63,7 @@ namespace Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred while creating the Licence Template.");
                 return false;
             }
         }
@@ -84,7 +84,7 @@ namespace Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred while deleting the License Temolate.");
                 return false;
             }
         }
@@ -98,7 +98,7 @@ namespace Services
 
                 if (string.IsNullOrEmpty(response))
                 {
-                    _logger.LogInformation("Could not Create product");
+                    _logger.LogInformation("Could not  generating the License Key.");
                     return null;
                 }
 
@@ -106,7 +106,7 @@ namespace Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred while generating the License Key.");
                 return null;
             }
         }
@@ -119,7 +119,7 @@ namespace Services
 
                 if (productDatFiles == null || productDatFiles.Length == 0)
                 {
-                    _logger.LogInformation("Could not find Product.dat Files");
+                    _logger.LogInformation("Could not find Product.dat Files.");
                     return;
                 }
 
@@ -130,7 +130,7 @@ namespace Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred while setting Product.dat Files.");
             }
         }
 
@@ -146,7 +146,7 @@ namespace Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred while getting Product Ids.");
                 return null;
             }
         }
@@ -162,7 +162,7 @@ namespace Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred while Activating License");
                 return -1;
             }
         }

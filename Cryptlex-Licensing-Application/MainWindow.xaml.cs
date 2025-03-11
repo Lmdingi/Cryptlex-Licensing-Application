@@ -65,7 +65,7 @@ namespace Cryptlex_Licensing_Application
 
                 if(products == null || products.Length == 0)
                 {                    
-                    MessageBox.Show("Could not find products", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Could not find products.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
 
@@ -79,8 +79,8 @@ namespace Cryptlex_Licensing_Application
             } 
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                MessageBox.Show("An error occured while loading products", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError(ex, "An error occured while loading products.");
+                MessageBox.Show("An error occured while loading products.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             
@@ -92,28 +92,28 @@ namespace Cryptlex_Licensing_Application
             {
                 if (txtName.Text == null || txtName.Text.Trim() == "")
                 {
-                    MessageBox.Show("Please Enter Product Name", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Enter Product Name.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                     txtName.Focus();
                     return;
                 }
 
                 if (txtDisplayName.Text == null || txtDisplayName.Text.Trim() == "")
                 {
-                    MessageBox.Show("Please Enter Product Display Name", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Enter Product Display Name.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                     txtDisplayName.Focus();
                     return;
                 }
 
                 if (txtDescription.Text == null || txtDescription.Text.Trim() == "")
                 {
-                    MessageBox.Show("Please Enter Product Description", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Enter Product Description.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                     txtDescription.Focus();
                     return;
                 }
 
                 if (cmbLicenseTemplate.SelectedValue == null || cmbLicenseTemplate.SelectedIndex == 0)
                 {
-                    MessageBox.Show("Please Select a License Template", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Select a License Template.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                     cmbLicenseTemplate.Focus();
                     return;
                 }
@@ -129,13 +129,13 @@ namespace Cryptlex_Licensing_Application
 
                 if (!isCreated)
                 {
-                    MessageBox.Show("Could not create product", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Could not create product.", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
                 ClearTextBoxText(new TextBox[] { txtName, txtDisplayName, txtDescription });
 
-                MessageBox.Show("Product has been created", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Product has been created.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 LoadProducts();
                 LoadLicenseTemplates();
@@ -143,8 +143,8 @@ namespace Cryptlex_Licensing_Application
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                MessageBox.Show("An error occured while creating Product", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError(ex, "An error occured while creating Product.");
+                MessageBox.Show("An error occured while creating Product.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
         }
@@ -170,7 +170,7 @@ namespace Cryptlex_Licensing_Application
 
                         if (!isDeleted)
                         {
-                            MessageBox.Show("Could not delete product", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show("Could not delete product.", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
                             return;
                         }
 
@@ -183,8 +183,8 @@ namespace Cryptlex_Licensing_Application
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                MessageBox.Show("An error occured while deleting product", "Error", MessageBoxButton.OK, MessageBoxImage.Error);                
+                _logger.LogError(ex, "An error occured while deleting product.");
+                MessageBox.Show("An error occured while deleting product.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);                
             }
         }
         
@@ -197,7 +197,7 @@ namespace Cryptlex_Licensing_Application
 
                 if (licenseTemplates == null || licenseTemplates.Length == 0)
                 {
-                    MessageBox.Show("Could not find License Templates", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Could not find License Templates.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
 
@@ -215,8 +215,8 @@ namespace Cryptlex_Licensing_Application
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                MessageBox.Show("An error occured while loading License Templates", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError(ex, "An error occured while loading License Templates.");
+                MessageBox.Show("An error occured while loading License Templates.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
         }
@@ -227,28 +227,28 @@ namespace Cryptlex_Licensing_Application
             {
                 if (ltName.Text == null || ltName.Text.Trim() == "")
                 {
-                    MessageBox.Show("Please Enter Name", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Enter Name.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                     ltName.Focus();
                     return;
                 }
 
                 if (cmbFingerprintMatchingStrategy.SelectedValue == null || cmbFingerprintMatchingStrategy.SelectedIndex == 0)
                 {
-                    MessageBox.Show("Please Select Fingerprint Matching Strategy", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Select Fingerprint Matching Strategy.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                     cmbFingerprintMatchingStrategy.Focus();
                     return;
                 }
 
                 if (cmbExpirationStrategy.SelectedValue == null || cmbExpirationStrategy.SelectedIndex == 0)
                 {
-                    MessageBox.Show("Please Select Expiration Strategy", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Select Expiration Strategy.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                     cmbExpirationStrategy.Focus();
                     return;
                 }
 
                 if (cmbType.SelectedValue == null || cmbType.SelectedIndex == 0)
                 {
-                    MessageBox.Show("Please Select Type", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Select Type.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                     cmbType.Focus();
                     return;
                 }
@@ -276,14 +276,14 @@ namespace Cryptlex_Licensing_Application
 
                 if (!isCreated)
                 {
-                    MessageBox.Show("Could not create License Template", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Could not create License Template.", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
 
                 ClearTextBoxText(new TextBox[] { ltName, allowedActivations, allowedDeactivations,  serverSyncGracePeriod, serverSyncInterval, allowedClockOffset, expiringSoonEventOffset, validity });
 
-                MessageBox.Show("License Template has been created", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("License Template has been created.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 LoadProducts();
                 LoadLicenseTemplates();
@@ -291,8 +291,8 @@ namespace Cryptlex_Licensing_Application
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                MessageBox.Show("An error occured while creating a License Template", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError(ex, "An error occured while creating a License Template.");
+                MessageBox.Show("An error occured while creating a License Template.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
         }
@@ -318,7 +318,7 @@ namespace Cryptlex_Licensing_Application
 
                         if (!isDeleted)
                         {
-                            MessageBox.Show("Could not delete License Template", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show("Could not delete License Template.", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
                             return;
                         }
 
@@ -331,8 +331,8 @@ namespace Cryptlex_Licensing_Application
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                MessageBox.Show("An error occured while deleting License Template", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError(ex, "An error occured while deleting License Template.");
+                MessageBox.Show("An error occured while deleting License Template.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -342,7 +342,7 @@ namespace Cryptlex_Licensing_Application
             {
                 if (cmbProducts.SelectedValue == null || cmbProducts.SelectedIndex == 0)
                 {
-                    MessageBox.Show("Please Select a Product", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Select a Product.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                     cmbProducts.Focus();
                     return;
                 }
@@ -355,18 +355,18 @@ namespace Cryptlex_Licensing_Application
 
                 if (license is null)
                 {
-                    MessageBox.Show("Could not generate License Key", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Could not generate License Key.", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
-                txtLicenseKey.Text = license.Key;
+                txtGeneratedLicenseKey.Text = license.Key;
 
                 MessageBox.Show("License key have been successfully generated. Copy it and click 'Clear' when done.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                MessageBox.Show("An error occured while Generating License Key", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError(ex, "An error occured while Generating License Key.");
+                MessageBox.Show("An error occured while Generating License Key.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -378,7 +378,7 @@ namespace Cryptlex_Licensing_Application
 
                 if(productIds == null || productIds.Length == 0)
                 {
-                    MessageBox.Show("Activation failed, no Product Id found", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Activation failed, no Product Id found.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
 
                     return;
                 }
@@ -397,103 +397,81 @@ namespace Cryptlex_Licensing_Application
 
                 if (status == LexStatusCodes.LA_OK || status == LexStatusCodes.LA_EXPIRED || status == LexStatusCodes.LA_SUSPENDED)
                 {
-                    MessageBox.Show("Activation successful", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Activation successful.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
 
                     txtActivatingLicenseKey.Text = "";
                 }
                 else
                 {                   
-                    MessageBox.Show("Activation failed", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Activation failed.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (LexActivatorException ex)
             {
-                _logger.LogError(ex.Message, ex);
-                MessageBox.Show("An error occured while Activating License", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _logger.LogError(ex, "An error occured while Activating License.");
+                MessageBox.Show("An error occured while Activating License.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        private void ClearGeneratedLicenseKey_Click(object sender, RoutedEventArgs e)
+        {
+            txtGeneratedLicenseKey.Text = "";
+        }
         private void ClearLicenseKey_Click(object sender, RoutedEventArgs e)
         {
-            txtLicenseKey.Text = "";
+            txtActivatingLicenseKey.Text = "";
         }
 
-        //********************
         private void BindProducts()
         {
-            try
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Text");
+            dt.Columns.Add("Value");
+            dt.Rows.Add("--SELECT--", null);
+            
+            foreach (var product in Products)
             {
-                DataTable dt = new DataTable();
-                dt.Columns.Add("Text");
-                dt.Columns.Add("Value");
-
-                dt.Rows.Add("--SELECT--", null);
-
-                foreach (var product in Products)
-                {
-                    dt.Rows.Add(product.Name, product.Id);
-                }
-
-                cmbProducts.ItemsSource = dt.DefaultView;
-                cmbProducts.DisplayMemberPath = "Text";
-                cmbProducts.SelectedValuePath = "Value";
-                cmbProducts.SelectedIndex = 0;
+                dt.Rows.Add(product.Name, product.Id);
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-            }
+            
+            cmbProducts.ItemsSource = dt.DefaultView;
+            cmbProducts.DisplayMemberPath = "Text";
+            cmbProducts.SelectedValuePath = "Value";
+            cmbProducts.SelectedIndex = 0;
         }
 
         private void BindLicenseTemplates()
         {
-            try
+            DataTable dtLicenseTemplates = new DataTable();
+            dtLicenseTemplates.Columns.Add("Text");
+            dtLicenseTemplates.Columns.Add("Value");
+            dtLicenseTemplates.Rows.Add("--SELECT--", null);
+            
+            foreach (var licenseTemplate in LicenseTemplates)
             {
-                DataTable dtLicenseTemplates = new DataTable();
-                dtLicenseTemplates.Columns.Add("Text");
-                dtLicenseTemplates.Columns.Add("Value");
-
-                dtLicenseTemplates.Rows.Add("--SELECT--", null);
-
-                foreach (var licenseTemplate in LicenseTemplates)
-                {
-                    dtLicenseTemplates.Rows.Add(licenseTemplate.Name, licenseTemplate.Id);
-                }
-
-                cmbLicenseTemplate.ItemsSource = dtLicenseTemplates.DefaultView;
-                cmbLicenseTemplate.DisplayMemberPath = "Text";
-                cmbLicenseTemplate.SelectedValuePath = "Value";
-                cmbLicenseTemplate.SelectedIndex = 0;
-            } 
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
+                dtLicenseTemplates.Rows.Add(licenseTemplate.Name, licenseTemplate.Id);
             }
+            
+            cmbLicenseTemplate.ItemsSource = dtLicenseTemplates.DefaultView;
+            cmbLicenseTemplate.DisplayMemberPath = "Text";
+            cmbLicenseTemplate.SelectedValuePath = "Value";
+            cmbLicenseTemplate.SelectedIndex = 0;
         }
 
         private void LoadComboBoxOptions(string[] options, ComboBox comboBox)
         {
-            try
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Value");
+            dt.Rows.Add("--SELECT--");
+            foreach (var option in options)
             {
-                DataTable dt = new DataTable();
-                dt.Columns.Add("Value");
-
-                dt.Rows.Add("--SELECT--");
-
-                foreach (var option in options)
-                {
-                    dt.Rows.Add(option);
-                }
-
-                comboBox.ItemsSource = dt.DefaultView;
-                comboBox.DisplayMemberPath = "Value";
-                comboBox.SelectedValuePath = "Value";
-                comboBox.SelectedIndex = 0;
+                dt.Rows.Add(option);
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-            }
+            
+            comboBox.ItemsSource = dt.DefaultView;
+            comboBox.DisplayMemberPath = "Value";
+            comboBox.SelectedValuePath = "Value";
+            comboBox.SelectedIndex = 0;
         }
 
         private void ClearTextBoxText(TextBox[] textBoxes)

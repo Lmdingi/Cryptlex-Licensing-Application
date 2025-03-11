@@ -14,5 +14,8 @@ namespace Services.Interfaces
         Task<bool> CreateLicenseTemplateAsync(CreateLicenseTemplateDto licenseTemplateDto);
         Task<bool> DeletelicenseTemplateAsync(Guid licenseTemplateId);
         Task<License> GenerateLicenseKeyAsync(CreateLicenseKeyDto createLicenseKeyDto);
+        void SetProductFiles();
+        string[] GetProductIds();
+        int ActivateLicense(string licenseKey, string productId);
     }
 }

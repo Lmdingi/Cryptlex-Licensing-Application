@@ -118,16 +118,16 @@
 
                 <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="10">
-                        <TextBlock Text="Product Name:" />
+                        <TextBlock Text="Product Name:" Margin="0,10,0,5"/>
                         <TextBox x:Name="txtName" />
 
-                        <TextBlock Text="Display Name:" Margin="0,10,0,0"/>
+                        <TextBlock Text="Display Name:" Margin="0,10,0,5"/>
                         <TextBox x:Name="txtDisplayName" />
 
-                        <TextBlock Text="Description:" Margin="0,10,0,0"/>
+                        <TextBlock Text="Description:" Margin="0,10,0,5"/>
                         <TextBox x:Name="txtDescription" />
 
-                        <TextBlock Text="License Template:" Margin="0,10,0,0"/>
+                        <TextBlock Text="License Template:" Margin="0,10,0,5"/>
                         <ComboBox Name="cmbLicenseTemplate"  Height="30" VerticalContentAlignment="Center" VerticalAlignment="Top"  MaxDropDownHeight="150"></ComboBox>
                         <Button Content="Create Product" Click="CreateProduct_Click" Margin="0,20,0,0"/>
                     </StackPanel>
@@ -141,7 +141,7 @@
         <TabItem Name="tbLicenseManager" Header="Manage Licenses">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="300"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
@@ -205,17 +205,21 @@
                     <TextBlock Text="Product:" Margin="10,2,10,02"/>
                     <ComboBox Name="cmbProducts"  Height="30" VerticalContentAlignment="Center" VerticalAlignment="Top"  MaxDropDownHeight="150" Margin="10,2,10,10"></ComboBox>
 
-                    <TextBox Name="txtLicenseKey" TextWrapping="Wrap" IsReadOnly="True" Margin="10,2,10,10" />
+                    <TextBox Name="txtGeneratedLicenseKey" TextWrapping="Wrap" IsReadOnly="True" Margin="10,2,10,10" />
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left">
                         <Button Content="Create" Click="CreateLicenseKey_Click" Margin="10,0,0,10"  Width="50" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        <Button Content="Clear" Click="ClearLicenseKey_Click" Margin="10,0,10,10" Width="50" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <Button Content="Clear" Click="ClearGeneratedLicenseKey_Click" Margin="10,0,10,10" Width="50" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     </StackPanel>
                 </StackPanel>
 
                 <StackPanel Grid.Row="5">
                     <Label Content="Activating License Key" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1"/>
-                    <TextBox x:Name="txtActivatingLicenseKey" Margin="10,0,10,10"/>
-                    <Button Content="Activate" Click="activateLicenseBtn_Click" Margin="10,0,10,10" Width="60" HorizontalAlignment="Left"/>
+                    <TextBox x:Name="txtActivatingLicenseKey" Margin="10,0,10,10"/>                    
+
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <Button Content="Activate" Click="activateLicenseBtn_Click" Margin="10,0,0,10" Width="60" HorizontalAlignment="Left"/>
+                        <Button Content="Clear" Click="ClearLicenseKey_Click" Margin="10,0,10,10" Width="50" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </StackPanel>
                 </StackPanel>
 
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,0,0,5">

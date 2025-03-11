@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Services
@@ -33,14 +34,14 @@ namespace Services
 
                 var content = new StringContent(data, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await _httpClient.PostAsync(Url.BaseUrl + endpoint, content);
+                HttpResponseMessage response = await WaitAndRetryAsync(async () => await _httpClient.PostAsync(Url.BaseUrl + endpoint, content));
                 response.EnsureSuccessStatusCode();
 
                 return await response.Content.ReadAsStringAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred while processing the POST request.");
                 return null;
             }
         }
@@ -51,14 +52,14 @@ namespace Services
             {
                 CheckAccessToken();
 
-                HttpResponseMessage response = await _httpClient.DeleteAsync(Url.BaseUrl + endpoint);
+                HttpResponseMessage response = await WaitAndRetryAsync(async () => await _httpClient.DeleteAsync(Url.BaseUrl + endpoint));
                 response.EnsureSuccessStatusCode();
 
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred while processing the DELETE request.");
                 return false;
             }
         }
@@ -69,14 +70,15 @@ namespace Services
             {
                 CheckAccessToken();
 
-                HttpResponseMessage response = await _httpClient.GetAsync(Url.BaseUrl + endpoint);
+                HttpResponseMessage response = await WaitAndRetryAsync(async () => await _httpClient.GetAsync(Url.BaseUrl + endpoint));
+
                 response.EnsureSuccessStatusCode();
 
                 return await response.Content.ReadAsStringAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred while processing the GET request.");
                 return null;
             }
         }
@@ -86,6 +88,50 @@ namespace Services
             if (_httpClient.DefaultRequestHeaders.Authorization == null)
             {
                 throw new ArgumentNullException("ACCESS_TOKEN - Token not found!");
+            }
+        }
+
+        private async Task<HttpResponseMessage> WaitAndRetryAsync(
+         Func<Task<HttpResponseMessage>> action)
+        {       
+            try
+            {
+                int maxRetries = 3;
+                HttpResponseMessage response;
+
+                do
+                {
+                    response = await action();
+
+                    if (response.StatusCode != (HttpStatusCode)429)
+                    {
+                        break;
+                    }
+
+                    CheckRateLimit(response);
+                    maxRetries--;
+                }
+                while (maxRetries > 0);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        private async void CheckRateLimit(HttpResponseMessage response)
+        {
+            if (response.Headers.Contains("X-Rate-Limit-Reset"))
+            {
+                string rateLimitReset = response.Headers.GetValues("X-Rate-Limit-Reset").FirstOrDefault();
+
+                DateTime resetTime = DateTime.Parse(rateLimitReset, null, System.Globalization.DateTimeStyles.RoundtripKind);
+                TimeSpan waitTime = resetTime - DateTime.UtcNow;
+
+                await Task.Delay(waitTime);
             }
         }
     }

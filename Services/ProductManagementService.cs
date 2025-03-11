@@ -30,14 +30,14 @@ namespace Services
 
                 if (string.IsNullOrEmpty(response)) 
                 {
-                    _logger.LogInformation("Could not find products");
+                    _logger.LogInformation("Could not find products.");
                     return Array.Empty<Product>();
                 }
                 return JsonConvert.DeserializeObject<Product[]>(response);
             }
             catch (Exception ex) 
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred while getting the products.");
                 return null;
             }
         }
@@ -51,7 +51,7 @@ namespace Services
 
                 if (string.IsNullOrEmpty(response))
                 {
-                    _logger.LogInformation("Could not Create product");
+                    _logger.LogInformation("Could not Create product.");
                     return false;
                 }
 
@@ -59,7 +59,7 @@ namespace Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred while creating the product.");
                 return false;
             }
             
@@ -81,7 +81,7 @@ namespace Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, "An error occurred while deleting the product.");
                 return false;
             }
         }
