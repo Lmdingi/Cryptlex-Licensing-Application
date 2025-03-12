@@ -1,15 +1,10 @@
-﻿using Newtonsoft.Json;
-using Services.Constants;
+﻿using Services.Constants;
 using Services.Interfaces;
-using Services.Models;
 using System;
-using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Services
@@ -30,8 +25,6 @@ namespace Services
         {
             try
             {
-                CheckAccessToken();
-
                 var content = new StringContent(data, Encoding.UTF8, "application/json");
 
                 HttpResponseMessage response = await WaitAndRetryAsync(async () => await _httpClient.PostAsync(Url.BaseUrl + endpoint, content));
@@ -50,8 +43,6 @@ namespace Services
         {
             try
             {
-                CheckAccessToken();
-
                 HttpResponseMessage response = await WaitAndRetryAsync(async () => await _httpClient.DeleteAsync(Url.BaseUrl + endpoint));
                 response.EnsureSuccessStatusCode();
 
@@ -68,8 +59,6 @@ namespace Services
         {
             try
             {
-                CheckAccessToken();
-
                 HttpResponseMessage response = await WaitAndRetryAsync(async () => await _httpClient.GetAsync(Url.BaseUrl + endpoint));
 
                 response.EnsureSuccessStatusCode();
@@ -83,25 +72,19 @@ namespace Services
             }
         }
 
-        private void CheckAccessToken()
-        {
-            if (_httpClient.DefaultRequestHeaders.Authorization == null)
-            {
-                throw new ArgumentNullException("ACCESS_TOKEN - Token not found!");
-            }
-        }
-
         private async Task<HttpResponseMessage> WaitAndRetryAsync(
-         Func<Task<HttpResponseMessage>> action)
+         Func<Task<HttpResponseMessage>> sendRequest)
         {       
             try
             {
+                CheckAccessToken();
+
                 int maxRetries = 3;
                 HttpResponseMessage response;
 
                 do
                 {
-                    response = await action();
+                    response = await sendRequest();
 
                     if (response.StatusCode != (HttpStatusCode)429)
                     {
@@ -119,6 +102,14 @@ namespace Services
             {
                 _logger.LogError(ex, ex.Message);
                 return null;
+            }
+        }
+
+        private void CheckAccessToken()
+        {
+            if (_httpClient.DefaultRequestHeaders.Authorization == null)
+            {
+                throw new ArgumentNullException("ACCESS_TOKEN - Token not found!");
             }
         }
 

@@ -4,25 +4,13 @@ using Services;
 using Services.Constants;
 using Services.DTOs;
 using Services.Models;
-using Sprache;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Xml.Linq;
-using System.IO;
+
 using ServiceType = Services.Constants.Type;
 
 namespace Cryptlex_Licensing_Application
@@ -65,7 +53,7 @@ namespace Cryptlex_Licensing_Application
 
                 if(products == null || products.Length == 0)
                 {                    
-                    MessageBox.Show("Could not find products.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Could not find products.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
@@ -92,28 +80,28 @@ namespace Cryptlex_Licensing_Application
             {
                 if (txtName.Text == null || txtName.Text.Trim() == "")
                 {
-                    MessageBox.Show("Please Enter Product Name.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Enter Product Name.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     txtName.Focus();
                     return;
                 }
 
                 if (txtDisplayName.Text == null || txtDisplayName.Text.Trim() == "")
                 {
-                    MessageBox.Show("Please Enter Product Display Name.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Enter Product Display Name.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     txtDisplayName.Focus();
                     return;
                 }
 
                 if (txtDescription.Text == null || txtDescription.Text.Trim() == "")
                 {
-                    MessageBox.Show("Please Enter Product Description.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Enter Product Description.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     txtDescription.Focus();
                     return;
                 }
 
                 if (cmbLicenseTemplate.SelectedValue == null || cmbLicenseTemplate.SelectedIndex == 0)
                 {
-                    MessageBox.Show("Please Select a License Template.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Select a License Template.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     cmbLicenseTemplate.Focus();
                     return;
                 }
@@ -129,7 +117,7 @@ namespace Cryptlex_Licensing_Application
 
                 if (!isCreated)
                 {
-                    MessageBox.Show("Could not create product.", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Could not create product.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -170,7 +158,7 @@ namespace Cryptlex_Licensing_Application
 
                         if (!isDeleted)
                         {
-                            MessageBox.Show("Could not delete product.", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show("Could not delete product.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                             return;
                         }
 
@@ -197,7 +185,7 @@ namespace Cryptlex_Licensing_Application
 
                 if (licenseTemplates == null || licenseTemplates.Length == 0)
                 {
-                    MessageBox.Show("Could not find License Templates.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Could not find License Templates.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -227,28 +215,28 @@ namespace Cryptlex_Licensing_Application
             {
                 if (ltName.Text == null || ltName.Text.Trim() == "")
                 {
-                    MessageBox.Show("Please Enter Name.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Enter Name.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     ltName.Focus();
                     return;
                 }
 
                 if (cmbFingerprintMatchingStrategy.SelectedValue == null || cmbFingerprintMatchingStrategy.SelectedIndex == 0)
                 {
-                    MessageBox.Show("Please Select Fingerprint Matching Strategy.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Select Fingerprint Matching Strategy.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     cmbFingerprintMatchingStrategy.Focus();
                     return;
                 }
 
                 if (cmbExpirationStrategy.SelectedValue == null || cmbExpirationStrategy.SelectedIndex == 0)
                 {
-                    MessageBox.Show("Please Select Expiration Strategy.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Select Expiration Strategy.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     cmbExpirationStrategy.Focus();
                     return;
                 }
 
                 if (cmbType.SelectedValue == null || cmbType.SelectedIndex == 0)
                 {
-                    MessageBox.Show("Please Select Type.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Select Type.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     cmbType.Focus();
                     return;
                 }
@@ -276,7 +264,7 @@ namespace Cryptlex_Licensing_Application
 
                 if (!isCreated)
                 {
-                    MessageBox.Show("Could not create License Template.", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Could not create License Template.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -318,7 +306,7 @@ namespace Cryptlex_Licensing_Application
 
                         if (!isDeleted)
                         {
-                            MessageBox.Show("Could not delete License Template.", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show("Could not delete License Template.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                             return;
                         }
 
@@ -342,7 +330,7 @@ namespace Cryptlex_Licensing_Application
             {
                 if (cmbProducts.SelectedValue == null || cmbProducts.SelectedIndex == 0)
                 {
-                    MessageBox.Show("Please Select a Product.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Please Select a Product.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     cmbProducts.Focus();
                     return;
                 }
@@ -355,7 +343,7 @@ namespace Cryptlex_Licensing_Application
 
                 if (license is null)
                 {
-                    MessageBox.Show("Could not generate License Key.", "Information", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Could not generate License Key.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -378,7 +366,7 @@ namespace Cryptlex_Licensing_Application
 
                 if(productIds == null || productIds.Length == 0)
                 {
-                    MessageBox.Show("Activation failed, no Product Id found.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Activation failed, no Product Id found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
                     return;
                 }
@@ -403,7 +391,7 @@ namespace Cryptlex_Licensing_Application
                 }
                 else
                 {                   
-                    MessageBox.Show("Activation failed.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Activation failed.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (LexActivatorException ex)
